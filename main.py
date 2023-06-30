@@ -4,6 +4,7 @@ import time
 from dqn_agent import DQNAgent
 from epsilon_profile import EpsilonProfile
 from game.SpaceInvaders import SpaceInvaders
+import game
 
 from networks import MLP, CNN
 
@@ -39,14 +40,14 @@ def main(nn, opt):
 
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
-    n_episodes = 1000
-    max_steps = 100
+    n_episodes = 100
+    max_steps = 500
     gamma = 1.
     alpha = 0.01
     eps_profile = EpsilonProfile(1.0, 0.1)
 
     # Hyperparamètres de DQN
-    final_exploration_episode = 500
+    final_exploration_episode = 200
     batch_size = 64
     replay_memory_size = 1000
     target_update_frequency = 100
@@ -69,6 +70,13 @@ def main(nn, opt):
     """  LEARNING PARAMETERS"""
     agent = DQNAgent(model, eps_profile, gamma, alpha, replay_memory_size, batch_size, target_update_frequency, tau, final_exploration_episode)
     agent.learn(env, n_episodes, max_steps)
+    state = env.reset()
+    print("Test du jeu...")
+    while True:
+        action = agent.select_action(state)
+        state, reward, is_done = env.step(action)
+        time.sleep(0.001)
+    
     # test_maze(env, agent, max_steps, speed=1, display=False)
 
 if __name__ == '__main__':

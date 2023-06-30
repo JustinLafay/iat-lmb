@@ -105,6 +105,8 @@ class DQNAgent(QAgent):
         for episode in range(n_episodes):
             # Reinitialise l'environnement
             state = env.reset()
+            print("episode ", episode)
+
             # Execute K steps
             for step in range(max_steps):
                 # Selectionne une action
@@ -138,21 +140,21 @@ class DQNAgent(QAgent):
                     # Copie le réseau de neurones courant dans le réseau cible
                     self.hard_update()
 
-            n_ckpt = 10
-            if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:   
-                test_score, test_extra_steps = self.run_tests(env, 10, max_steps)
-                # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,
-                #np.mean(sum_rewards[episode-(n_ckpt-1):episode+1]), np.mean(len_episode[episode-(n_ckpt-1):episode+1]), test_score, np.mean(test_extra_steps), 
-                print('Episode: %5d/%5d, steps: %6d, test success ratio: %.2f, epsilon: %.2f, time: %.1f'
-                      % (episode + 1, n_episodes, self.ds, np.sum(test_extra_steps == 0) / 100, self.epsilon, time.time() - start_time))
+            # n_ckpt = 10
+            # if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:   
+            #     test_score, test_extra_steps = self.run_tests(env, 10, max_steps)
+            #     # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,
+            #     np.mean(sum_rewards[episode-(n_ckpt-1):episode+1]), np.mean(len_episode[episode-(n_ckpt-1):episode+1]), test_score, np.mean(test_extra_steps), 
+            #     print('Episode: %5d/%5d, steps: %6d, test success ratio: %.2f, epsilon: %.2f, time: %.1f'
+            #           % (episode + 1, n_episodes, self.ds, np.sum(test_extra_steps == 0) / 100, self.epsilon, time.time() - start_time))
 
-        n_test_runs = 100
-        test_score, test_extra_steps = self.run_tests(env, n_test_runs, max_steps)
-        for k in range(n_test_runs):
-            print(test_extra_steps[k])
-        print('Final test score: %.1f' % test_score)
+        # n_test_runs = 100
+        # test_score, test_extra_steps = self.run_tests(env, n_test_runs, max_steps)
+        # for k in range(n_test_runs):
+        #     print(test_extra_steps[k])
+        # print('Final test score: %.1f' % test_score)
         
-        print('Final test success ratio: %.2f' % (np.sum(test_extra_steps == 0) / n_test_runs))
+        # print('Final test success ratio: %.2f' % (np.sum(test_extra_steps == 0) / n_test_runs))
 
     def updateQ(self, state, action, reward, next_state, terminal):
         """ Cette méthode utilise une transition pour mettre à jour la fonction de valeur Q de l'agent. 
