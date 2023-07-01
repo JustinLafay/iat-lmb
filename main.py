@@ -33,21 +33,21 @@ def test_maze(env: SpaceInvaders, agent: DQNAgent, max_steps: int, nepisodes : i
     return n_steps, sum_rewards
 
 
-def main(nn, opt):
+def main(nn, mode):
  
     """ INSTANCIE LE LABYRINTHE """ 
     env = SpaceInvaders(display=True)
 
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
-    n_episodes = 200
+    n_episodes = 2000
     max_steps = 1000
     gamma = 1.
     alpha = 0.01
     eps_profile = EpsilonProfile(1.0, 0.1)
 
     # Hyperparamètres de DQN
-    final_exploration_episode = 70
+    final_exploration_episode = 1500
     batch_size = 64
     replay_memory_size = 1000
     target_update_frequency = 100
@@ -69,13 +69,21 @@ def main(nn, opt):
 
     """  LEARNING PARAMETERS"""
     agent = DQNAgent(model, eps_profile, gamma, alpha, replay_memory_size, batch_size, target_update_frequency, tau, final_exploration_episode)
-    agent.learn(env, n_episodes, max_steps)
+    print("******* mode = "+mode+"********")
+    if(mode == "learn"):
+        agent.learn(env, n_episodes, max_steps)
+        agent.save_qfunction()
+    elif(mode == "test"):
+        print("Début du test")
+        agent.load_qfunction(env)
+        state = env.reset()
+        print("Test du jeu...")
+        while True:
+            action = agent.select_action(state)
+            state, reward, is_done = env.step(action)
+            time.sleep(0.001)
     state = env.reset()
-    print("Test du jeu...")
-    while True:
-        action = agent.select_action(state)
-        state, reward, is_done = env.step(action)
-        time.sleep(0.001)
+    
     
     # test_maze(env, agent, max_steps, speed=1, display=False)
 
@@ -86,8 +94,8 @@ if __name__ == '__main__':
     - Third argument (int) : the maze width
     """
     if (len(sys.argv) > 2):
-        main(sys.argv[1], sys.argv[2:])
-    if (len(sys.argv) > 1):
+        main(sys.argv[1], sys.argv[2])
+    elif (len(sys.argv) > 1):
         main(sys.argv[1], [])
     else:
         main("random", [])

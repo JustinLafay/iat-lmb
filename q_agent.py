@@ -3,6 +3,7 @@ from __init__ import AgentInterface
 from game.SpaceInvaders import SpaceInvaders
 from epsilon_profile import EpsilonProfile
 import pandas as pd
+import pickle
 
 class QAgent(AgentInterface):
     """ 
@@ -149,3 +150,4 @@ class QAgent(AgentInterface):
 
         self.qvalues = self.qvalues.append({'episode': episode, 'value': self.Q[state][self.select_greedy_action(state)]}, ignore_index=True)
         self.values = self.values.append({'episode': episode, 'value': np.reshape(V,(1, self.maze.ny*self.maze.nx))[0]},ignore_index=True)
+    
