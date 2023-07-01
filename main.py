@@ -33,10 +33,14 @@ def test_maze(env: SpaceInvaders, agent: DQNAgent, max_steps: int, nepisodes : i
     return n_steps, sum_rewards
 
 
-def main(nn, mode):
- 
+def main(nn: str= "mlp", mode : str= "test"):
+    
+    if(mode == "learn"):
+        env = SpaceInvaders(display=False)
+    if(mode == "test"):
+        env = SpaceInvaders(display=True)
     """ INSTANCIE LE LABYRINTHE """ 
-    env = SpaceInvaders(display=True)
+    
 
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
