@@ -14,7 +14,7 @@ class DQNAgent():
     Cette classe d'agent représente un agent utilisant l'algorithme DQN pour mettre 
     à jour sa politique d'action.
     """
-    TEST_FREQUENCY = 10
+    TEST_FREQUENCY = 100
 
     def __init__(self, qnetwork: nn.Module, eps_profile: EpsilonProfile, gamma: float, alpha: float, replay_memory_size: int = 1000, batch_size: int = 32, target_update_freq: int = 100, tau: float = 1., final_exploration_episode : int = 500):
         """
@@ -145,7 +145,7 @@ class DQNAgent():
 
             n_ckpt = 10
             if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:
-                test_score, test_extra_steps, mean_scores = self.run_tests(env, 10, 1000)
+                test_score, test_extra_steps, mean_scores = self.run_tests(env, 10, max_steps)
                 array_epsilone.append(self.epsilon)
                 array_test_scores.append(mean_scores)
                 # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,

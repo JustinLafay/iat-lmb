@@ -45,16 +45,16 @@ def main(nn: str= "mlp", mode : str= "test"):
 
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
-    n_episodes = 200
-    max_steps = 700
-    gamma = 0.5
-    alpha = 0.5
-    eps_profile = EpsilonProfile(1.0, 0.1, dec_episode=20)
+    n_episodes = 500
+    max_steps = 1000
+    gamma = 1.0
+    alpha = 0.001
+    eps_profile = EpsilonProfile(1.0, 0.1)
 
     # Hyperparamètres de DQN
-    final_exploration_episode = 66
-    batch_size = len(env.get_state())
-    replay_memory_size = 100
+    final_exploration_episode = 200
+    batch_size = 100
+    replay_memory_size = 500
     target_update_frequency = 100
     tau = 1.0
 
