@@ -89,9 +89,12 @@ class SpaceInvaders():
         Cette méthode doit renvoyer l'état du système comme vous aurez choisi de
         le représenter. Vous pouvez utiliser les accesseurs ci-dessus pour cela. 
         """
-        distance_joueur = math.sqrt((self.get_player_X()-self.get_indavers_X()[0])**2)
-        sens_invader = (self.get_indavers_X()[0]-self.prev_alien_x)
-        distance_balle = math.sqrt(abs((self.get_bullet_X()-self.get_indavers_X()[0])**2 + (self.get_bullet_Y()-self.get_indavers_Y()[0])**2))
+        # distance_joueur = math.sqrt((self.get_player_X()-self.get_indavers_X()[0])**2 + (self.get_player_Y()-self.get_indavers_Y()[0])**2)
+        distance_joueur_x = self.get_indavers_X()[0]-self.get_player_X()
+        distance_joueur_y = self.get_indavers_Y()[0]-self.get_player_Y()
+        sens_invader = self.get_indavers_X()[0]-self.prev_alien_x
+        # distance_balle = math.sqrt(abs((self.get_bullet_X()-self.get_indavers_X()[0])**2 + (self.get_bullet_Y()-self.get_indavers_Y()[0])**2))
+
         if self.bullet_state == "rest" :
             fire = 0
         else : fire = 1
@@ -99,7 +102,7 @@ class SpaceInvaders():
         self.prev_alien_x = self.get_indavers_X()[0]
         self.prev_alien_Y = self.get_indavers_Y()[0]
 
-        state = [distance_joueur, distance_balle, sens_invader, fire]
+        state = [distance_joueur_x, distance_joueur_y, sens_invader, fire]
 
         return state
 

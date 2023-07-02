@@ -14,7 +14,7 @@ class DQNAgent():
     Cette classe d'agent représente un agent utilisant l'algorithme DQN pour mettre 
     à jour sa politique d'action.
     """
-    TEST_FREQUENCY = 100
+    TEST_FREQUENCY = 10
 
     def __init__(self, qnetwork: nn.Module, eps_profile: EpsilonProfile, gamma: float, alpha: float, replay_memory_size: int = 1000, batch_size: int = 32, target_update_freq: int = 100, tau: float = 1., final_exploration_episode : int = 500):
         """
@@ -97,6 +97,10 @@ class DQNAgent():
         len_episode = np.zeros(n_episodes)
         n_steps = np.zeros(n_episodes) + max_steps
 
+        # Initialisation du suivi des paramètres
+
+        array_test_scores = []
+
         start_time = time.time()
 
         # Execute N episodes
@@ -138,20 +142,22 @@ class DQNAgent():
                     # Copie le réseau de neurones courant dans le réseau cible
                     self.hard_update()
 
-            # n_ckpt = 10
-            # if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:   
-            #     test_score, test_extra_steps = self.run_tests(env, 10, max_steps)
-            #     # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,
-            #     np.mean(sum_rewards[episode-(n_ckpt-1):episode+1]), np.mean(len_episode[episode-(n_ckpt-1):episode+1]), test_score, np.mean(test_extra_steps), 
-            #     print('Episode: %5d/%5d, steps: %6d, test success ratio: %.2f, epsilon: %.2f, time: %.1f'
-            #           % (episode + 1, n_episodes, self.ds, np.sum(test_extra_steps == 0) / 100, self.epsilon, time.time() - start_time))
+            n_ckpt = 10
+            if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:
+                test_score, test_extra_steps, mean_scores = self.run_tests(env, 10, max_steps)
+                array_test_scores.append(mean_scores)
+                # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,
+                # np.mean(sum_rewards[episode-(n_ckpt-1):episode+1]), np.mean(len_episode[episode-(n_ckpt-1):episode+1]), test_score, np.mean(test_extra_steps), 
+                # print('Episode: %5d/%5d, steps: %6d, test success ratio: %.2f, epsilon: %.2f, time: %.1f'
+                #       % (episode + 1, n_episodes, self.ds, test_score, self.epsilon, time.time() - start_time))
+                print(array_test_scores)
 
         # n_test_runs = 100
         # test_score, test_extra_steps = self.run_tests(env, n_test_runs, max_steps)
         # for k in range(n_test_runs):
         #     print(test_extra_steps[k])
         # print('Final test score: %.1f' % test_score)
-        
+        return array_test_scores
         # print('Final test success ratio: %.2f' % (np.sum(test_extra_steps == 0) / n_test_runs))
 
     def updateQ(self, state, action, reward, next_state, terminal):
@@ -234,7 +240,8 @@ class DQNAgent():
 
     def run_tests(self, env: SpaceInvaders, n_runs, max_steps):
         test_score = 0.
-        extra_steps = np.zeros((n_runs, 2))
+        array_test_score = []
+        extra_steps = np.zeros((n_runs, 10))
         for k in range(n_runs):
             s = env.reset()
             for t in range(max_steps):
@@ -246,7 +253,9 @@ class DQNAgent():
                 if terminal:
                     break
                 s = sn
+            array_test_score.append(test_score)
             extra_steps[k] = t + 1
+
         order = extra_steps[:, 0].argsort()
         extra_steps = extra_steps[order]
-        return test_score / n_runs, extra_steps
+        return test_score / n_runs, extra_steps, np.mean(array_test_score)
