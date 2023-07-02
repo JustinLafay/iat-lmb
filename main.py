@@ -81,7 +81,7 @@ def main(nn: str= "mlp", mode : str= "test"):
             for line in lines:
                 f.write(f"{line}\n")
         file = open("./dqn_parameters/dqn.pkl", "wb")
-        pickle.dump(agent, f)
+        pickle.dump(agent, file)
         file.close()
     
     elif(mode == "test"):
