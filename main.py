@@ -4,8 +4,6 @@ import pickle
 from dqn_agent import DQNAgent
 from epsilon_profile import EpsilonProfile
 from game.SpaceInvaders import SpaceInvaders
-import game
-
 from networks import MLP, CNN
 
 # test once by taking greedy actions based on Q values

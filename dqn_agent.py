@@ -5,12 +5,11 @@ import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
 import time
-from q_agent import QAgent
 from game.SpaceInvaders import SpaceInvaders
 from epsilon_profile import EpsilonProfile
 
 
-class DQNAgent(QAgent):
+class DQNAgent():
     """ 
     Cette classe d'agent représente un agent utilisant l'algorithme DQN pour mettre 
     à jour sa politique d'action.
@@ -199,6 +198,19 @@ class DQNAgent(QAgent):
 
             loss.backward()
             self.optimizer.step()
+
+    def select_action(self, state : 'tuple[int, int]'):
+        """
+        Cette méthode retourne une action échantilloner selon le processus d'exploration (ici epsilon-greedy).
+
+        :param state: L'état courant
+        :return: L'action 
+        """
+        if np.random.rand() < self.epsilon:
+            a = np.random.randint(self.na)      # random action
+        else:
+            a = self.select_greedy_action(state)
+        return a
 
     def select_greedy_action(self, state):
         """
