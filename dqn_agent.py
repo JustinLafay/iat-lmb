@@ -100,6 +100,7 @@ class DQNAgent():
         # Initialisation du suivi des paramètres
 
         array_test_scores = []
+        array_epsilone = []
 
         start_time = time.time()
 
@@ -129,7 +130,7 @@ class DQNAgent():
                     break
 
                 state = next_state
-
+            
             self.epsilon = max(self.final_epsilon, self.epsilon - (1. / self.final_exploration_episode))
             # self.epsilon = max(self.epsilon - self.eps_profile.dec_step, self.eps_profile.final)
 
@@ -144,7 +145,8 @@ class DQNAgent():
 
             n_ckpt = 10
             if episode % DQNAgent.TEST_FREQUENCY == DQNAgent.TEST_FREQUENCY - 1:
-                test_score, test_extra_steps, mean_scores = self.run_tests(env, 10, max_steps)
+                test_score, test_extra_steps, mean_scores = self.run_tests(env, 10, 1000)
+                array_epsilone.append(self.epsilon)
                 array_test_scores.append(mean_scores)
                 # train score: %.1f, mean steps: %.1f, test score: %.1f, test extra steps: %.1f,
                 # np.mean(sum_rewards[episode-(n_ckpt-1):episode+1]), np.mean(len_episode[episode-(n_ckpt-1):episode+1]), test_score, np.mean(test_extra_steps), 
@@ -157,7 +159,7 @@ class DQNAgent():
         # for k in range(n_test_runs):
         #     print(test_extra_steps[k])
         # print('Final test score: %.1f' % test_score)
-        return array_test_scores
+        return array_test_scores, array_epsilone
         # print('Final test success ratio: %.2f' % (np.sum(test_extra_steps == 0) / n_test_runs))
 
     def updateQ(self, state, action, reward, next_state, terminal):
