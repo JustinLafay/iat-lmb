@@ -5,7 +5,6 @@ import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
 import time
-import pickle
 from q_agent import QAgent
 from game.SpaceInvaders import SpaceInvaders
 from epsilon_profile import EpsilonProfile
@@ -239,14 +238,3 @@ class DQNAgent(QAgent):
         order = extra_steps[:, 0].argsort()
         extra_steps = extra_steps[order]
         return test_score / n_runs, extra_steps
-    
-    def save_qfunction(self, filename: str = "qfunction.sav"):
-        f = open(filename, "wb")
-        pickle.dump(self.criterion, f)
-        f.close()
-
-    def load_qfunction(self, env, filename: str = "qfunction.sav"):
-        f = open(filename, "rb")
-        self.criterion = pickle.load(f)
-        f.close()
-        self.na = env.na

@@ -1,6 +1,6 @@
 import sys
 import time
-
+import pickle
 from dqn_agent import DQNAgent
 from epsilon_profile import EpsilonProfile
 from game.SpaceInvaders import SpaceInvaders
@@ -44,14 +44,14 @@ def main(nn: str= "mlp", mode : str= "test"):
 
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
-    n_episodes = 2000
-    max_steps = 1000
+    n_episodes = 50
+    max_steps = 500
     gamma = 1.
     alpha = 0.01
     eps_profile = EpsilonProfile(1.0, 0.1)
 
     # Hyperparamètres de DQN
-    final_exploration_episode = 1500
+    final_exploration_episode = 10
     batch_size = 64
     replay_memory_size = 1000
     target_update_frequency = 100
@@ -76,17 +76,23 @@ def main(nn: str= "mlp", mode : str= "test"):
     print("******* mode = "+mode+"********")
     if(mode == "learn"):
         agent.learn(env, n_episodes, max_steps)
-        agent.save_qfunction()
+        f = open("./dqn_parameters/qfunction.pkl", "wb")
+        pickle.dump(agent, f)
+        f.close()
+    
     elif(mode == "test"):
         print("Début du test")
-        agent.load_qfunction(env)
+        f = open("./dqn_parameters/qfunction.pkl", "rb")
+        agent2 = pickle.load(f)
+        f.close()
         state = env.reset()
         print("Test du jeu...")
         while True:
-            action = agent.select_action(state)
+            action = agent2.select_action(state)
             state, reward, is_done = env.step(action)
             time.sleep(0.001)
-    state = env.reset()
+    
+    
     
     
     # test_maze(env, agent, max_steps, speed=1, display=False)

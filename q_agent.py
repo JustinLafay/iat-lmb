@@ -3,7 +3,6 @@ from __init__ import AgentInterface
 from game.SpaceInvaders import SpaceInvaders
 from epsilon_profile import EpsilonProfile
 import pandas as pd
-import pickle
 
 class QAgent(AgentInterface):
     """ 
