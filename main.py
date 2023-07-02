@@ -37,7 +37,7 @@ def test_maze(env: SpaceInvaders, agent: DQNAgent, max_steps: int, nepisodes : i
 def main(nn: str= "mlp", mode : str= "test"):
     
     if(mode == "learn"):
-        env = SpaceInvaders(display=True)
+        env = SpaceInvaders(display=False)
     if(mode == "test"):
         env = SpaceInvaders(display=True)
     """ INSTANCIE LE LABYRINTHE """ 
@@ -46,7 +46,7 @@ def main(nn: str= "mlp", mode : str= "test"):
     """ INITIALISE LES PARAMETRES D'APPRENTISSAGE """
     # Hyperparamètres basiques
     n_episodes = 100
-    max_steps = 5
+    max_steps = 10000
     gamma = 0.05
     alpha = 0.5
     eps_profile = EpsilonProfile(1.0, 0.1)
